@@ -15,10 +15,44 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            display: flex;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .sidebar h2 {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 1em 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            display: block;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
         }
         .container {
+            margin-left: 220px;
             height: 100vh;
-            width: 100vw;
+            width: calc(100vw - 220px);
             display: flex;
             flex-direction: column;
             scroll-snap-type: y mandatory;
@@ -89,27 +123,22 @@
     </style>
 </head>
 <body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#basic">Basic Functions</a></li>
+            <li><a href="#aggregating">Aggregating Data</a></li>
+            <li><a href="#partitioning">Partitioning & Ordering</a></li>
+            <li><a href="#advanced">Advanced Functions</a></li>
+            <li><a href="#examples">Examples & Exercises</a></li>
+            <li><a href="#optimization">Optimization Tips</a></li>
+            <li><a href="#conclusion">Conclusion & Q&A</a></li>
+        </ul>
+    </div>
     <div class="container">
-        <!-- Summary Page -->
-        <div class="slide">
-            <img src="logo.png" alt="Logo" class="logo">
-            <h1>Snowflake SQL Window Functions Training Program</h1>
-            <h2>Summary</h2>
-            <p>This training program includes:</p>
-            <ul>
-                <li>Introduction to Window Functions</li>
-                <li>Basic Window Functions</li>
-                <li>Aggregating Data with Window Functions</li>
-                <li>Partitioning and Ordering</li>
-                <li>Advanced Window Functions</li>
-                <li>Practical Examples and Exercises</li>
-                <li>Optimization Tips and Best Practices</li>
-                <li>Conclusion and Q&A</li>
-            </ul>
-        </div>
-
         <!-- Slide 1 -->
-        <div class="slide">
+        <div id="intro" class="slide">
             <h2>Introduction to Window Functions</h2>
             <p>
                 Definition and Use Cases<br>
@@ -121,7 +150,7 @@
         </div>
 
         <!-- Slide 2 -->
-        <div class="slide">
+        <div id="basic" class="slide">
             <h2>Basic Window Functions</h2>
             <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
             <pre><code>
@@ -135,7 +164,7 @@ FROM
         </div>
 
         <!-- Slide 3 -->
-        <div class="slide">
+        <div id="aggregating" class="slide">
             <h2>Aggregating Data with Window Functions</h2>
             <p>SUM(), AVG(), MIN(), MAX(): Calculate the running total of sales for each employee.</p>
             <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
@@ -150,7 +179,7 @@ FROM
         </div>
 
         <!-- Slide 4 -->
-        <div class="slide">
+        <div id="partitioning" class="slide">
             <h2>Partitioning and Ordering</h2>
             <p>PARTITION BY Clause: Calculate total sales for each region.</p>
             <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
@@ -175,7 +204,7 @@ FROM
         </div>
 
         <!-- Slide 5 -->
-        <div class="slide">
+        <div id="advanced" class="slide">
             <h2>Advanced Window Functions</h2>
             <p>LAG() and LEAD(): Compare current sale quantity with the previous sale quantity for each product.</p>
             <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
@@ -203,21 +232,21 @@ FROM
         </div>
 
         <!-- Slide 6 -->
-        <div class="slide">
+        <div id="examples" class="slide">
             <h2>Practical Examples and Exercises</h2>
             <p>Hands-on Queries: Perform step-by-step query constructions from simple to complex window functions.</p>
             <p>Real-world Scenarios: Apply window functions to solve a business problem such as finding the top-selling product for each region each month.</p>
         </div>
 
         <!-- Slide 7 -->
-        <div class="slide">
+        <div id="optimization" class="slide">
             <h2>Optimization Tips and Best Practices</h2>
             <p>Performance Considerations: Tips for optimizing window function queries.</p>
             <p>Common Pitfalls: Avoiding common mistakes.</p>
         </div>
 
         <!-- Slide 8 -->
-        <div class="slide">
+        <div id="conclusion" class="slide">
             <h2>Conclusion and Q&A</h2>
             <p>Summary: Recap of key concepts and functions.</p>
             <p>Interactive Q&A: Address participants' questions and clarifying doubts.</p>
@@ -236,6 +265,16 @@ FROM
                 button.textContent = "Show Code";
             }
         }
+
+        // Smooth scrolling
+        document.querySelectorAll('.sidebar a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
 </body>
 </html>
