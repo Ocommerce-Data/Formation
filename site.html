@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Snowflake SQL Window Functions Training Program</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .container {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+        .slide {
+            height: 100vh;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            scroll-snap-align: start;
+        }
+        h1 {
+            color: #007bff;
+            font-size: 3em;
+            margin: 0.5em 0;
+        }
+        h2 {
+            color: #007bff;
+            font-size: 2.5em;
+            margin: 0.5em 0;
+        }
+        p {
+            line-height: 1.6;
+        }
+        pre {
+            background-color: #2b2b2b;
+            color: #dcdcdc;
+            padding: 1em;
+            border-radius: 5px;
+            text-align: left;
+            max-width: 100%;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            display: none; /* Initially hidden */
+        }
+        .toggle-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .logo {
+            max-width: 100px;
+            margin-bottom: 20px;
+        }
+        ul {
+            text-align: left;
+            font-size: 1.2em;
+        }
+        @media (min-width: 600px) {
+            .slide {
+                padding: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Summary Page -->
+        <div class="slide">
+            <img src="logo.png" alt="Logo" class="logo">
+            <h1>Snowflake SQL Window Functions Training Program</h1>
+            <h2>Summary</h2>
+            <p>This training program includes:</p>
+            <ul>
+                <li>Introduction to Window Functions</li>
+                <li>Basic Window Functions</li>
+                <li>Aggregating Data with Window Functions</li>
+                <li>Partitioning and Ordering</li>
+                <li>Advanced Window Functions</li>
+                <li>Practical Examples and Exercises</li>
+                <li>Optimization Tips and Best Practices</li>
+                <li>Conclusion and Q&A</li>
+            </ul>
+        </div>
+
+        <!-- Slide 1 -->
+        <div class="slide">
+            <h2>Introduction to Window Functions</h2>
+            <p>
+                Definition and Use Cases<br>
+                - What are window functions?<br>
+                - Why and when to use them?<br>
+                Syntax Overview<br>
+                - General structure of a window function in Snowflake.
+            </p>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+            <h2>Basic Window Functions</h2>
+            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <pre><code>
+SELECT 
+    sale_id, 
+    region, 
+    ROW_NUMBER() OVER (PARTITION BY region ORDER BY sale_date) AS row_num
+FROM 
+    sales;
+            </code></pre>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+            <h2>Aggregating Data with Window Functions</h2>
+            <p>SUM(), AVG(), MIN(), MAX(): Calculate the running total of sales for each employee.</p>
+            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <pre><code>
+SELECT 
+    sale_id, 
+    employee_id, 
+    SUM(quantity * price) OVER (PARTITION BY employee_id ORDER BY sale_date) AS running_total
+FROM 
+    sales;
+            </code></pre>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+            <h2>Partitioning and Ordering</h2>
+            <p>PARTITION BY Clause: Calculate total sales for each region.</p>
+            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <pre><code>
+SELECT 
+    sale_id, 
+    region, 
+    SUM(quantity * price) OVER (PARTITION BY region) AS region_total_sales
+FROM 
+    sales;
+            </code></pre>
+            <p>ORDER BY Clause: Calculate the cumulative sales for each region, ordered by sale_date.</p>
+            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <pre><code>
+SELECT 
+    sale_id, 
+    region, 
+    SUM(quantity * price) OVER (PARTITION BY region ORDER BY sale_date) AS cumulative_sales
+FROM 
+    sales;
+            </code></pre>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+            <h2>Advanced Window Functions</h2>
+            <p>LAG() and LEAD(): Compare current sale quantity with the previous sale quantity for each product.</p>
+            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <pre><code>
+SELECT 
+    sale_id, 
+    product_id, 
+    quantity, 
+    LAG(quantity) OVER (PARTITION BY product_id ORDER BY sale_date) AS prev_quantity
+FROM 
+    sales;
+            </code></pre>
+            <p>FIRST_VALUE() and LAST_VALUE(): Retrieve the first and last sale price for each product within each region.</p>
+            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <pre><code>
+SELECT 
+    sale_id, 
+    product_id, 
+    region, 
+    FIRST_VALUE(price) OVER (PARTITION BY product_id, region ORDER BY sale_date) AS first_price, 
+    LAST_VALUE(price) OVER (PARTITION BY product_id, region ORDER BY sale_date ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_price
+FROM 
+    sales;
+            </code></pre>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide">
+            <h2>Practical Examples and Exercises</h2>
+            <p>Hands-on Queries: Perform step-by-step query constructions from simple to complex window functions.</p>
+            <p>Real-world Scenarios: Apply window functions to solve a business problem such as finding the top-selling product for each region each month.</p>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide">
+            <h2>Optimization Tips and Best Practices</h2>
+            <p>Performance Considerations: Tips for optimizing window function queries.</p>
+            <p>Common Pitfalls: Avoiding common mistakes.</p>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide">
+            <h2>Conclusion and Q&A</h2>
+            <p>Summary: Recap of key concepts and functions.</p>
+            <p>Interactive Q&A: Address participants' questions and clarifying doubts.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript to toggle code visibility -->
+    <script>
+        function toggleCode(button) {
+            const pre = button.nextElementSibling;
+            if (pre.style.display === "none" || pre.style.display === "") {
+                pre.style.display = "block";
+                button.textContent = "Hide Code";
+            } else {
+                pre.style.display = "none";
+                button.textContent = "Show Code";
+            }
+        }
+    </script>
+</body>
+</html>
