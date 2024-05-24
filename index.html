@@ -6,32 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom CSS -->
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
+            background-color: #1e1e1e;
+            color: #ffffff;
             margin: 0;
             padding: 0;
-            overflow: hidden;
             display: flex;
+            overflow: hidden;
         }
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 200px;
+            width: 180px;
             height: 100%;
-            background-color: #007bff;
+            background-color: #0363dfc4;
             color: white;
             padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             z-index: 1000;
+            transition: all 0.3s;
         }
         .sidebar h2 {
             font-size: 1.5em;
             margin-bottom: 1em;
+            text-align: center;
         }
         .sidebar ul {
             list-style: none;
@@ -43,43 +47,56 @@
         .sidebar ul li a {
             color: white;
             text-decoration: none;
-            font-size: 1.2em;
-            display: block;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
         }
         .sidebar ul li a:hover {
-            text-decoration: underline;
+            color: #ffd700;
         }
-        .container {
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
+        .content-wrapper {
             margin-left: 220px;
+            padding: 40px;
+            width: calc(100% - 20px);
             height: 100vh;
-            width: calc(100vw - 220px);
-            display: flex;
-            flex-direction: column;
-            scroll-snap-type: y mandatory;
             overflow-y: scroll;
+            box-sizing: border-box;
             -webkit-overflow-scrolling: touch;
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
         .slide {
-            height: 100vh;
-            width: 100%;
-            background-color: #ffffff;
+            width: calc(100% - 25px);
+            background-color: #2e2e2e;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             scroll-snap-align: start;
+            margin-bottom: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .slide:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
         }
         h1 {
-            color: #007bff;
+            color: #ffffff;
             font-size: 3em;
             margin: 0.5em 0;
         }
         h2 {
-            color: #007bff;
+            color: #ffffff;
             font-size: 2.5em;
             margin: 0.5em 0;
         }
@@ -87,7 +104,7 @@
             line-height: 1.6;
         }
         pre {
-            background-color: #2b2b2b;
+            background-color: #3b3b3b;
             color: #dcdcdc;
             padding: 1em;
             border-radius: 5px;
@@ -96,16 +113,20 @@
             overflow-x: auto;
             white-space: pre-wrap;
             word-break: break-all;
-            display: none; /* Initially hidden */
+            display: none;
         }
         .toggle-button {
-            background-color: #007bff;
+            background-color: #1a73e8;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .toggle-button:hover {
+            background-color: #0056b3;
         }
         .logo {
             max-width: 100px;
@@ -115,100 +136,96 @@
             text-align: left;
             font-size: 1.2em;
         }
-        @media (min-width: 600px) {
-            .slide {
-                padding: 40px;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h2>Menu</h2>
         <ul>
-            <li><a href="#intro">Introduction</a></li>
-            <li><a href="#basic">Basic Functions</a></li>
-            <li><a href="#aggregating">Aggregating Data</a></li>
-            <li><a href="#partitioning">Partitioning & Ordering</a></li>
-            <li><a href="#advanced">Advanced Functions</a></li>
-            <li><a href="#examples">Examples & Exercises</a></li>
-            <li><a href="#optimization">Optimization Tips</a></li>
-            <li><a href="#conclusion">Conclusion & Q&A</a></li>
+            <li><a href="#intro"><i class="fas fa-home"></i>Introduction</a></li>
+            <li><a href="#basic"><i class="fas fa-code"></i>Basic Functions</a></li>
+            <li><a href="#aggregating"><i class="fas fa-chart-bar"></i>Aggregating Data</a></li>
+            <li><a href="#partitioning"><i class="fas fa-th"></i>Partitioning & Ordering</a></li>
+            <li><a href="#advanced"><i class="fas fa-cogs"></i>Advanced Functions</a></li>
+            <li><a href="#examples"><i class="fas fa-flask"></i>Examples & Exercises</a></li>
+            <li><a href="#optimization"><i class="fas fa-chart-line"></i>Optimization Tips</a></li>
+            <li><a href="#conclusion"><i class="fas fa-question-circle"></i>Conclusion & Q&A</a></li>
         </ul>
     </div>
-    <div class="container">
-        <!-- Slide 1 -->
-        <div id="intro" class="slide">
-            <h2>Introduction to Window Functions</h2>
-            <p>
-                Definition and Use Cases<br>
-                - What are window functions?<br>
-                - Why and when to use them?<br>
-                Syntax Overview<br>
-                - General structure of a window function in Snowflake.
-            </p>
-        </div>
+    <div class="content-wrapper">
+        <div class="container">
+            <!-- Slide 1 -->
+            <div id="intro" class="slide">
+                <h2>Introduction to Window Functions</h2>
+                <p>
+                    Definition and Use Cases<br>
+                    - What are window functions?<br>
+                    - Why and when to use them?<br>
+                    Syntax Overview<br>
+                    - General structure of a window function in Snowflake.
+                </p>
+            </div>
 
-        <!-- Slide 2 -->
-        <div id="basic" class="slide">
-            <h2>Basic Window Functions</h2>
-            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
-            <pre><code>
+            <!-- Slide 2 -->
+            <div id="basic" class="slide">
+                <h2>Basic Window Functions</h2>
+                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <pre><code>
 SELECT 
     sale_id, 
     region, 
     ROW_NUMBER() OVER (PARTITION BY region ORDER BY sale_date) AS row_num
 FROM 
     sales;
-            </code></pre>
-        </div>
+                </code></pre>
+            </div>
 
-        <!-- Slide 3 -->
-        <div id="aggregating" class="slide">
-            <h2>Aggregating Data with Window Functions</h2>
-            <p>SUM(), AVG(), MIN(), MAX(): Calculate the running total of sales for each employee.</p>
-            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
-            <pre><code>
+            <!-- Slide 3 -->
+            <div id="aggregating" class="slide">
+                <h2>Aggregating Data with Window Functions</h2>
+                <p>SUM(), AVG(), MIN(), MAX(): Calculate the running total of sales for each employee.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <pre><code>
 SELECT 
     sale_id, 
     employee_id, 
     SUM(quantity * price) OVER (PARTITION BY employee_id ORDER BY sale_date) AS running_total
 FROM 
     sales;
-            </code></pre>
-        </div>
+                </code></pre>
+            </div>
 
-        <!-- Slide 4 -->
-        <div id="partitioning" class="slide">
-            <h2>Partitioning and Ordering</h2>
-            <p>PARTITION BY Clause: Calculate total sales for each region.</p>
-            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
-            <pre><code>
+            <!-- Slide 4 -->
+            <div id="partitioning" class="slide">
+                <h2>Partitioning and Ordering</h2>
+                <p>PARTITION BY Clause: Calculate total sales for each region.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <pre><code>
 SELECT 
     sale_id, 
     region, 
     SUM(quantity * price) OVER (PARTITION BY region) AS region_total_sales
 FROM 
     sales;
-            </code></pre>
-            <p>ORDER BY Clause: Calculate the cumulative sales for each region, ordered by sale_date.</p>
-            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
-            <pre><code>
+                </code></pre>
+                <p>ORDER BY Clause: Calculate the cumulative sales for each region, ordered by sale_date.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <pre><code>
 SELECT 
     sale_id, 
     region, 
     SUM(quantity * price) OVER (PARTITION BY region ORDER BY sale_date) AS cumulative_sales
 FROM 
     sales;
-            </code></pre>
-        </div>
+                </code></pre>
+            </div>
 
-        <!-- Slide 5 -->
-        <div id="advanced" class="slide">
-            <h2>Advanced Window Functions</h2>
-            <p>LAG() and LEAD(): Compare current sale quantity with the previous sale quantity for each product.</p>
-            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
-            <pre><code>
+            <!-- Slide 5 -->
+            <div id="advanced" class="slide">
+                <h2>Advanced Window Functions</h2>
+                <p>LAG() and LEAD(): Compare current sale quantity with the previous sale quantity for each product.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <pre><code>
 SELECT 
     sale_id, 
     product_id, 
@@ -216,10 +233,10 @@ SELECT
     LAG(quantity) OVER (PARTITION BY product_id ORDER BY sale_date) AS prev_quantity
 FROM 
     sales;
-            </code></pre>
-            <p>FIRST_VALUE() and LAST_VALUE(): Retrieve the first and last sale price for each product within each region.</p>
-            <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
-            <pre><code>
+                </code></pre>
+                <p>FIRST_VALUE() and LAST_VALUE(): Retrieve the first and last sale price for each product within each region.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <pre><code>
 SELECT 
     sale_id, 
     product_id, 
@@ -228,28 +245,29 @@ SELECT
     LAST_VALUE(price) OVER (PARTITION BY product_id, region ORDER BY sale_date ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_price
 FROM 
     sales;
-            </code></pre>
-        </div>
+                </code></pre>
+            </div>
 
-        <!-- Slide 6 -->
-        <div id="examples" class="slide">
-            <h2>Practical Examples and Exercises</h2>
-            <p>Hands-on Queries: Perform step-by-step query constructions from simple to complex window functions.</p>
-            <p>Real-world Scenarios: Apply window functions to solve a business problem such as finding the top-selling product for each region each month.</p>
-        </div>
+            <!-- Slide 6 -->
+            <div id="examples" class="slide">
+                <h2>Practical Examples and Exercises</h2>
+                <p>Hands-on Queries: Perform step-by-step query constructions from simple to complex window functions.</p>
+                <p>Real-world Scenarios: Apply window functions to solve a business problem such as finding the top-selling product for each region each month.</p>
+            </div>
 
-        <!-- Slide 7 -->
-        <div id="optimization" class="slide">
-            <h2>Optimization Tips and Best Practices</h2>
-            <p>Performance Considerations: Tips for optimizing window function queries.</p>
-            <p>Common Pitfalls: Avoiding common mistakes.</p>
-        </div>
+            <!-- Slide 7 -->
+            <div id="optimization" class="slide">
+                <h2>Optimization Tips and Best Practices</h2>
+                <p>Performance Considerations: Tips for optimizing window function queries.</p>
+                <p>Common Pitfalls: Avoiding common mistakes.</p>
+            </div>
 
-        <!-- Slide 8 -->
-        <div id="conclusion" class="slide">
-            <h2>Conclusion and Q&A</h2>
-            <p>Summary: Recap of key concepts and functions.</p>
-            <p>Interactive Q&A: Address participants' questions and clarifying doubts.</p>
+            <!-- Slide 8 -->
+            <div id="conclusion" class="slide">
+                <h2>Conclusion and Q&A</h2>
+                <p>Summary: Recap of key concepts and functions.</p>
+                <p>Interactive Q&A: Address participants' questions and clarifying doubts.</p>
+            </div>
         </div>
     </div>
 
