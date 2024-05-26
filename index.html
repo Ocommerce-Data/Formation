@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8">
-    <title>Snowflake SQL Window Functions Training Program</title>
+    <title>Programme de Formation sur les Fonctions de Fenêtre SQL de Snowflake</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom CSS -->
@@ -23,11 +24,11 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 180px;
+            width: 120px;
             height: 100%;
-            background-color: #0363dfc4;
+            background-color: #292b2c;
             color: white;
-            padding: 20px;
+            padding: 20px 0;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             transition: all 0.3s;
@@ -43,25 +44,40 @@
         }
         .sidebar ul li {
             margin: 1em 0;
+            text-align: center;
         }
         .sidebar ul li a {
             color: white;
             text-decoration: none;
-            font-size: 1.1em;
+            font-size: 0.9em;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            transition: color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
+            padding: 10px 0;
         }
-        .sidebar ul li a:hover {
-            color: #ffd700;
+        .sidebar ul li a:hover, .sidebar ul li a.active {
+            background-color: #0363df;
+            color: #ffffff;
         }
         .sidebar ul li a i {
-            margin-right: 10px;
+            display: block;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        .author {
+            position: absolute;
+            bottom: 60px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 1em;
+            color: white;
         }
         .content-wrapper {
-            margin-left: 220px;
+            margin-left: 100px;
             padding: 40px;
-            width: calc(100% - 20px);
+            width: calc(100% - 100px);
             height: 100vh;
             overflow-y: scroll;
             box-sizing: border-box;
@@ -90,18 +106,47 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
         }
-        h1 {
+        h1, h2 {
             color: #ffffff;
-            font-size: 3em;
             margin: 0.5em 0;
         }
+        h1 {
+            font-size: 3em;
+        }
         h2 {
-            color: #ffffff;
             font-size: 2.5em;
-            margin: 0.5em 0;
         }
         p {
             line-height: 1.6;
+        }
+        table {
+            margin: 20px 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid #dddddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #444;
+        }
+        pres {
+            background-color: #3b3b3b;
+            color: #dcdcdc;
+            padding: 1em;
+            border-radius: 5px;
+            text-align: left;
+            max-width: 100%;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
         pre {
             background-color: #3b3b3b;
@@ -116,8 +161,8 @@
             display: none;
         }
         .toggle-button {
-            background-color: #1a73e8;
-            color: white;
+            background-color: #ffffffce;
+            color: rgb(0, 0, 0);
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
@@ -128,145 +173,468 @@
         .toggle-button:hover {
             background-color: #0056b3;
         }
-        .logo {
-            max-width: 100px;
-            margin-bottom: 20px;
-        }
-        ul {
-            text-align: left;
-            font-size: 1.2em;
-        }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h2>Menu</h2>
         <ul>
-            <li><a href="#intro"><i class="fas fa-home"></i>Introduction</a></li>
-            <li><a href="#basic"><i class="fas fa-code"></i>Basic Functions</a></li>
-            <li><a href="#aggregating"><i class="fas fa-chart-bar"></i>Aggregating Data</a></li>
-            <li><a href="#partitioning"><i class="fas fa-th"></i>Partitioning & Ordering</a></li>
-            <li><a href="#advanced"><i class="fas fa-cogs"></i>Advanced Functions</a></li>
-            <li><a href="#examples"><i class="fas fa-flask"></i>Examples & Exercises</a></li>
-            <li><a href="#optimization"><i class="fas fa-chart-line"></i>Optimization Tips</a></li>
-            <li><a href="#conclusion"><i class="fas fa-question-circle"></i>Conclusion & Q&A</a></li>
+            <li><a href="#intro" class="active"><i class="fas fa-home"></i></a></li>
+            <li><a href="#reminder">REMINDER</a></li>
+            <li><a href="#row_number">ROW_NUMBER</a></li>
+            <li><a href="#ntile">NTILE</a></li>
+            <li><a href="#lag_lead">LAG/LEAD</a></li>
+            <li><a href="#first_last">FIRST/LAST</a></li>
         </ul>
+        <div class="author">by Adam Sadaka</div>
     </div>
     <div class="content-wrapper">
         <div class="container">
-            <!-- Slide 1 -->
+            <!-- Slide 1: Introduction -->
             <div id="intro" class="slide">
-                <h2>Introduction to Window Functions</h2>
-                <p>
-                    Definition and Use Cases<br>
-                    - What are window functions?<br>
-                    - Why and when to use them?<br>
-                    Syntax Overview<br>
-                    - General structure of a window function in Snowflake.
-                </p>
+                <h1>Snowflake SQL Window Functions Training</h1>
+                <h2>Introduction</h2>
+                <p>Bienvenue au Programme de Formation sur les Fonctions de Fenêtre SQL de Snowflake. Dans ce programme, nous couvrirons diverses fonctions de fenêtre essentielles pour les requêtes SQL avancées. Commençons!</p>
             </div>
 
-            <!-- Slide 2 -->
-            <div id="basic" class="slide">
-                <h2>Basic Window Functions</h2>
-                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <!-- Slide 2: Reminder -->
+            <div id="reminder" class="slide">
+                <h2>Rappel Rapide</h2>
+                <p>Avant de plonger dans les fonctions de fenêtre, faisons un petit exercice pour rafraîchir nos connaissances sur les bases de SQL.</p>
+                <p><strong>Exercice:</strong> Utilisez GROUP BY, WHERE, ORDER BY, et HAVING pour trouver la quantité totale commandée pour chaque SKU dans la section 'Électronique', où la quantité totale commandée est supérieure à 100, triée par étiquette SKU.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
                 <pre><code>
+-- Exercice: Utiliser GROUP BY, WHERE, ORDER BY, et HAVING
+-- Objectif: Trouver la quantité totale commandée pour chaque SKU dans la section 'Électronique', où la quantité totale commandée est supérieure à 100, triée par étiquette SKU.
+
 SELECT 
-    sale_id, 
-    region, 
-    ROW_NUMBER() OVER (PARTITION BY region ORDER BY sale_date) AS row_num
+    sku_id, 
+    sku_lb, 
+    SUM(quantity_ordered) AS total_quantity_ordered
 FROM 
-    sales;
+    sales
+WHERE 
+    section = 'Électronique'
+GROUP BY 
+    sku_id, sku_lb
+HAVING 
+    SUM(quantity_ordered) > 100
+ORDER BY 
+    sku_lb;
+                </code></pre>
+                <p><strong>Exercice:</strong> Combinez GROUP BY, LEFT JOIN, WHERE, ORDER BY, et HAVING pour trouver la quantité totale commandée pour chaque SKU, y compris les SKU sans commandes, où la quantité totale commandée est supérieure à 100, triée par étiquette SKU.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
+                <pre><code>
+-- Exercice: Combiner GROUP BY, LEFT JOIN, WHERE, ORDER BY, et HAVING
+-- Objectif: Trouver la quantité totale commandée pour chaque SKU, y compris les SKU sans commandes, où la quantité totale commandée est supérieure à 100, triée par étiquette SKU.
+
+SELECT 
+    p.sku_id, 
+    p.sku_lb, 
+    COALESCE(SUM(s.quantity_ordered), 0) AS total_quantity_ordered
+FROM 
+    pim_classification p
+LEFT JOIN 
+    sales s ON p.sku_id = s.sku_id
+WHERE 
+    p.section = 'Électronique'
+GROUP BY 
+    p.sku_id, p.sku_lb
+HAVING 
+    total_quantity_ordered > 100
+ORDER BY 
+    p.sku_lb;
                 </code></pre>
             </div>
 
-            <!-- Slide 3 -->
-            <div id="aggregating" class="slide">
-                <h2>Aggregating Data with Window Functions</h2>
-                <p>SUM(), AVG(), MIN(), MAX(): Calculate the running total of sales for each employee.</p>
-                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <!-- Slide 3: ROW_NUMBER -->
+            <div id="row_number" class="slide">
+                <h2>ROW_NUMBER</h2>
+                <p>ROW_NUMBER attribue un entier séquentiel unique aux lignes au sein d'une partition d'un ensemble de résultats, en commençant à 1 pour la première ligne de chaque partition.</p>
+                <p>Exemple:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>section</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Électronique</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Maison</td>
+                    </tr>
+                </table>
+                <p>Requête:</p>
+                <pres><code>
+SELECT 
+    sku_id, 
+    section, 
+    ROW_NUMBER() OVER (PARTITION BY section ORDER BY sku_id) AS row_num
+FROM 
+    pim_classification;
+                </code></pres>
+                <p>Résultat:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>section</th>
+                        <th>row_num</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Électronique</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Maison</td>
+                        <td>1</td>
+                    </tr>
+                </table>
+                <p><strong>Exercice:</strong> Attribuez un numéro de ligne unique à chaque SKU dans chaque section.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
                 <pre><code>
 SELECT 
-    sale_id, 
-    employee_id, 
-    SUM(quantity * price) OVER (PARTITION BY employee_id ORDER BY sale_date) AS running_total
+    sku_id, 
+    section, 
+    ROW_NUMBER() OVER (PARTITION BY section ORDER BY sku_id) AS row_num
 FROM 
-    sales;
+    pim_classification;
+                </code></pre>
+                <p><strong>Exercice:</strong> Attribuez un numéro de ligne unique à chaque SKU dans chaque section en triant par la quantité commandée.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
+                <pre><code>
+SELECT 
+    p.sku_id, 
+    p.section, 
+    ROW_NUMBER() OVER (PARTITION BY p.section ORDER BY s.quantity_ordered DESC) AS row_num
+FROM 
+    pim_classification p
+JOIN 
+    sales s ON p.sku_id = s.sku_id
+WHERE 
+    p.section = 'Électronique';
                 </code></pre>
             </div>
 
-            <!-- Slide 4 -->
-            <div id="partitioning" class="slide">
-                <h2>Partitioning and Ordering</h2>
-                <p>PARTITION BY Clause: Calculate total sales for each region.</p>
-                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <!-- Slide 4: NTILE -->
+            <div id="ntile" class="slide">
+                <h2>NTILE</h2>
+                <p>NTILE distribue les lignes d'une partition ordonnée en un nombre spécifié de groupes à peu près égaux.</p>
+                <p>Exemple:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>section</th>
+                        <th>quantity_ordered</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Électronique</td>
+                        <td>75</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Maison</td>
+                        <td>60</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Maison</td>
+                        <td>20</td>
+                    </tr>
+                </table>
+                <p>Requête:</p>
+                <pres><code>
+SELECT 
+    sku_id, 
+    section, 
+    quantity_ordered,
+    NTILE(2) OVER (PARTITION BY section ORDER BY quantity_ordered DESC) AS ntile
+FROM 
+    sales;
+                </code></pres>
+                <p>Résultat:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>section</th>
+                        <th>quantity_ordered</th>
+                        <th>ntile</th>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Électronique</td>
+                        <td>75</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>50</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Maison</td>
+                        <td>60</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Maison</td>
+                        <td>20</td>
+                        <td>2</td>
+                    </tr>
+                </table>
+                <p><strong>Exercice:</strong> Répartissez les SKU dans chaque section en 2 groupes basés sur la quantité totale commandée.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
                 <pre><code>
 SELECT 
-    sale_id, 
-    region, 
-    SUM(quantity * price) OVER (PARTITION BY region) AS region_total_sales
+    sku_id, 
+    section, 
+    quantity_ordered,
+    NTILE(2) OVER (PARTITION BY section ORDER BY quantity_ordered DESC) AS ntile
 FROM 
     sales;
                 </code></pre>
-                <p>ORDER BY Clause: Calculate the cumulative sales for each region, ordered by sale_date.</p>
-                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <p><strong>Exercice:</strong> Répartissez les SKU dans chaque section en 4 groupes basés sur la quantité totale commandée, en utilisant une jointure avec la table pim_classification.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
                 <pre><code>
 SELECT 
-    sale_id, 
-    region, 
-    SUM(quantity * price) OVER (PARTITION BY region ORDER BY sale_date) AS cumulative_sales
+    p.sku_id, 
+    p.section, 
+    SUM(s.quantity_ordered) AS total_quantity_ordered,
+    NTILE(4) OVER (PARTITION BY p.section ORDER BY SUM(s.quantity_ordered) DESC) AS ntile
 FROM 
-    sales;
+    pim_classification p
+JOIN 
+    sales s ON p.sku_id = s.sku_id
+GROUP BY 
+    p.sku_id, p.section;
                 </code></pre>
             </div>
 
-            <!-- Slide 5 -->
-            <div id="advanced" class="slide">
-                <h2>Advanced Window Functions</h2>
-                <p>LAG() and LEAD(): Compare current sale quantity with the previous sale quantity for each product.</p>
-                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+            <!-- Slide 5: LAG and LEAD -->
+            <div id="lag_lead" class="slide">
+                <h2>LAG et LEAD</h2>
+                <p>LAG et LEAD accèdent aux données d'une ligne suivante ou précédente dans le même ensemble de résultats sans utiliser de jointure interne.</p>
+                <p>Exemple:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>date</th>
+                        <th>quantity_ordered</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2023-01-01</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2023-01-02</td>
+                        <td>75</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2023-01-03</td>
+                        <td>60</td>
+                    </tr>
+                </table>
+                <p>Requête:</p>
+                <pres><code>
+SELECT 
+    sku_id, 
+    date, 
+    quantity_ordered,
+    LAG(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS prev_day_quantity,
+    LEAD(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS next_day_quantity
+FROM 
+    sales;
+                </code></pres>
+                <p>Résultat:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>date</th>
+                        <th>quantity_ordered</th>
+                        <th>prev_day_quantity</th>
+                        <th>next_day_quantity</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2023-01-01</td>
+                        <td>50</td>
+                        <td>NULL</td>
+                        <td>75</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2023-01-02</td>
+                        <td>75</td>
+                        <td>50</td>
+                        <td>60</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2023-01-03</td>
+                        <td>60</td>
+                        <td>75</td>
+                        <td>NULL</td>
+                    </tr>
+                </table>
+                <p><strong>Exercice:</strong> Comparez la quantité commandée pour chaque SKU avec le jour précédent et le jour suivant.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
                 <pre><code>
 SELECT 
-    sale_id, 
-    product_id, 
-    quantity, 
-    LAG(quantity) OVER (PARTITION BY product_id ORDER BY sale_date) AS prev_quantity
+    sku_id, 
+    date, 
+    quantity_ordered,
+    LAG(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS prev_day_quantity,
+    LEAD(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS next_day_quantity
 FROM 
     sales;
                 </code></pre>
-                <p>FIRST_VALUE() and LAST_VALUE(): Retrieve the first and last sale price for each product within each region.</p>
-                <button class="toggle-button" onclick="toggleCode(this)">Show Code</button>
+                <p><strong>Exercice:</strong> Comparez la quantité commandée pour chaque SKU avec le jour précédent et le jour suivant en filtrant par section 'Électronique' et en triant par date.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
                 <pre><code>
 SELECT 
-    sale_id, 
-    product_id, 
-    region, 
-    FIRST_VALUE(price) OVER (PARTITION BY product_id, region ORDER BY sale_date) AS first_price, 
-    LAST_VALUE(price) OVER (PARTITION BY product_id, region ORDER BY sale_date ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_price
+    p.sku_id, 
+    s.date, 
+    s.quantity_ordered,
+    LAG(s.quantity_ordered) OVER (PARTITION BY p.sku_id ORDER BY s.date) AS prev_day_quantity,
+    LEAD(s.quantity_ordered) OVER (PARTITION BY p.sku_id ORDER BY s.date) AS next_day_quantity
 FROM 
-    sales;
+    pim_classification p
+JOIN 
+    sales s ON p.sku_id = s.sku_id
+WHERE 
+    p.section = 'Électronique'
+ORDER BY 
+    s.date;
                 </code></pre>
             </div>
 
-            <!-- Slide 6 -->
-            <div id="examples" class="slide">
-                <h2>Practical Examples and Exercises</h2>
-                <p>Hands-on Queries: Perform step-by-step query constructions from simple to complex window functions.</p>
-                <p>Real-world Scenarios: Apply window functions to solve a business problem such as finding the top-selling product for each region each month.</p>
-            </div>
-
-            <!-- Slide 7 -->
-            <div id="optimization" class="slide">
-                <h2>Optimization Tips and Best Practices</h2>
-                <p>Performance Considerations: Tips for optimizing window function queries.</p>
-                <p>Common Pitfalls: Avoiding common mistakes.</p>
-            </div>
-
-            <!-- Slide 8 -->
-            <div id="conclusion" class="slide">
-                <h2>Conclusion and Q&A</h2>
-                <p>Summary: Recap of key concepts and functions.</p>
-                <p>Interactive Q&A: Address participants' questions and clarifying doubts.</p>
+            <!-- Slide 6: FIRST_VALUE and LAST_VALUE -->
+            <div id="first_last" class="slide">
+                <h2>FIRST_VALUE et LAST_VALUE</h2>
+                <p>FIRST_VALUE et LAST_VALUE renvoient la première et la dernière valeur dans une partition ordonnée d'un ensemble de résultats.</p>
+                <p>Exemple:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>section</th>
+                        <th>date</th>
+                        <th>quantity_ordered</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>2023-01-01</td>
+                        <td>50</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>2023-01-02</td>
+                        <td>75</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>2023-01-03</td>
+                        <td>60</td>
+                    </tr>
+                </table>
+                <p>Requête:</p>
+                <pres><code>
+SELECT 
+    sku_id, 
+    section, 
+    date, 
+    quantity_ordered,
+    FIRST_VALUE(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS first_quantity_ordered,
+    LAST_VALUE(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS last_quantity_ordered
+FROM 
+    sales;
+                </code></pres>
+                <p>Résultat:</p>
+                <table>
+                    <tr>
+                        <th>sku_id</th>
+                        <th>section</th>
+                        <th>quantity_ordered</th>
+                        <th>first_quantity_ordered</th>
+                        <th>last_quantity_ordered</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>50</td>
+                        <td>50</td>
+                        <td>60</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>75</td>
+                        <td>50</td>
+                        <td>60</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Électronique</td>
+                        <td>60</td>
+                        <td>50</td>
+                        <td>60</td>
+                    </tr>
+                </table>
+                <p><strong>Exercice:</strong> Récupérez la première et la dernière quantité commandée pour chaque SKU dans chaque section.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
+                <pre><code>
+SELECT 
+    sku_id, 
+    section, 
+    date, 
+    quantity_ordered,
+    FIRST_VALUE(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS first_quantity_ordered,
+    LAST_VALUE(quantity_ordered) OVER (PARTITION BY sku_id ORDER BY date) AS last_quantity_ordered
+FROM 
+    sales;
+                </code></pre>
+                <p><strong>Exercice:</strong> Récupérez la première et la dernière quantité commandée pour chaque SKU dans chaque section en triant par date et en utilisant une jointure avec la table pim_classification.</p>
+                <button class="toggle-button" onclick="toggleCode(this)">Afficher le Code</button>
+                <pre><code>
+SELECT 
+    p.sku_id, 
+    p.section, 
+    s.date, 
+    s.quantity_ordered,
+    FIRST_VALUE(s.quantity_ordered) OVER (PARTITION BY p.sku_id ORDER BY s.date) AS first_quantity_ordered,
+    LAST_VALUE(s.quantity_ordered) OVER (PARTITION BY p.sku_id ORDER BY s.date ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_quantity_ordered
+FROM 
+    pim_classification p
+JOIN 
+    sales s ON p.sku_id = s.sku_id
+ORDER BY 
+    p.section, s.date;
+                </code></pre>
             </div>
         </div>
     </div>
@@ -277,10 +645,10 @@ FROM
             const pre = button.nextElementSibling;
             if (pre.style.display === "none" || pre.style.display === "") {
                 pre.style.display = "block";
-                button.textContent = "Hide Code";
+                button.textContent = "Masquer le Code";
             } else {
                 pre.style.display = "none";
-                button.textContent = "Show Code";
+                button.textContent = "Afficher le Code";
             }
         }
 
@@ -292,7 +660,7 @@ FROM
                     behavior: 'smooth'
                 });
             });
-        });
+        }); 
     </script>
 </body>
 </html>
